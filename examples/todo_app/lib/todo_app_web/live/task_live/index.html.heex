@@ -1,3 +1,14 @@
+<.header>
+  <h1 class="flex text-base-content mb-2 text-3xl font-semibold leading-relaxed">
+    Tasks
+  </h1>
+  <:actions>
+    <.link patch={~p"/tasks/new"} class="">
+      <.button class="btn btn-soft">New Task</.button>
+    </.link>
+  </:actions>
+</.header>
+
 <.table
   id="tasks"
   rows={@streams.tasks}
