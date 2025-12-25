@@ -3,17 +3,22 @@
     <h1 class="flex text-base-content mb-2 text-3xl font-semibold leading-relaxed">
         Todo App
     </h1>
-    <:actions>
+    <!--:actions>
         <.link patch={~p"/tasks/new"} class="">
         <.button class="btn btn-soft">New Task</.button>
         </.link>
-    </:actions>
+    </:actions-->
     </.header>
 
     <form
         id="form"
         class="prose prose-md flex flex-col items-center justify-center mx-auto max-w-full bg-gray-100 text-gray-800 p-2"
+        phx-submit="add_task"
     >
+    <div id="add_task_id" class="flex items-center gap-4">
+        <.input id="text_id" field={@form[:text]} type="text" value={@add_task_text} label="" class="input input-bordered h-10 mt-2 min-w-[50vh]"/>
+        <.button class="btn btn-soft h-10" type="submit">Add Task</.button>
+    </div>
     <ul id="tasks" phx-update="stream" class="list bg-base-100 rounded-box shadow-md">
         <%= for {dom_id, %{id: id, task: task}} <- @streams.tasks do %>
             <li id={dom_id} class="list-row min-w-[100vh]">
@@ -28,7 +33,7 @@
                     <div class={due_date_text(task.completed)}>
                         {due_date_in_days(task.due_date)}
                     </div>
-                    <div class="tooltip hover:tooltip-open tooltip-right tooltip-secondary" data-tip={task.notes}>
+                    <div class={notes_tooltip(task.notes)} data-tip={task.notes}>
                         📝 Notes
                     </div>
                     

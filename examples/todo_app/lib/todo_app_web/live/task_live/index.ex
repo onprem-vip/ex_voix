@@ -20,6 +20,7 @@ defmodule TodoAppWeb.TaskLive.Index do
     {
       :ok,
       socket
+      |> assign(:add_task_text, nil)
       |> stream(:tasks, tasks)
     }
   end
@@ -62,6 +63,25 @@ defmodule TodoAppWeb.TaskLive.Index do
   def handle_info({TodoAppWeb.TaskLive.FormComponent, {:saved, task}}, socket) do
     tsk = %{id: task.id, task: task}
     {:noreply, stream_insert(socket, :tasks, tsk)}
+  end
+
+  @impl true
+  def handle_event("add_task", %{"task" => %{"text" => text}}, socket) do
+    IO.inspect(text, label: "add_task text")
+    if not is_nil(text) and text != "" do
+      socket =
+        socket |> assign(:add_task_text, text)
+
+      today = DateTime.utc_now()
+      today_date = DateTime.to_date(today)
+      due_date = Date.shift(today_date, week: 1)
+
+      {:ok, task} = Todos.create_task(%{"completed" => false, "text" => text, "priority" => "low", "due_date" => due_date, "notes" => ""})
+      tsk = %{id: task.id, task: task}
+      {:noreply, socket |> assign(:add_task_text, nil) |> stream_insert(:tasks, tsk)}
+    else
+      {:noreply, socket}
+    end
   end
 
   @impl true
@@ -129,5 +149,9 @@ defmodule TodoAppWeb.TaskLive.Index do
     if completed,
       do: "text-xs uppercase font-semibold opacity-30 badge badge-outline badge-secondary",
       else: "text-xs uppercase font-semibold opacity-60 badge badge-outline badge-secondary"
+  end
+
+  defp notes_tooltip(notes) do
+    if not is_nil(notes) and notes != "", do: "tooltip hover:tooltip-open tooltip-right tooltip-secondary", else: "hidden"
   end
 end
