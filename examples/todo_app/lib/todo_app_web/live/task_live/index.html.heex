@@ -1,8 +1,9 @@
 <div id="container" class="mx-auto max-w-[120vh]">
     <.header>
-    <h1 class="flex text-base-content mb-2 text-3xl font-semibold leading-relaxed">
-        Todo App
+    <h1 class="flex text-base-content text-3xl font-semibold leading-relaxed">
+        Task Manager
     </h1>
+    <h5 class="">Organize your day with AI assistance</h5>
     <!--:actions>
         <.link patch={~p"/tasks/new"} class="">
         <.button class="btn btn-soft">New Task</.button>
@@ -16,7 +17,7 @@
         phx-submit="add_task"
     >
     <div id="add_task_id" class="flex items-center gap-4">
-        <.input id="text_id" field={@form[:text]} type="text" value={@add_task_text} label="" class="input input-bordered h-10 mt-2 min-w-[50vh]"/>
+        <.input id="text_id" field={@form[:text]} type="text" value={@add_task_text} label="" placeholder="What need to be done?" class="input input-bordered h-10 mt-2 min-w-[50vh]"/>
         <.button class="btn btn-soft h-10" type="submit">Add Task</.button>
     </div>
     <ul id="tasks" phx-update="stream" class="list bg-base-100 rounded-box shadow-md">
