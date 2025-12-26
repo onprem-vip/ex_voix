@@ -3,6 +3,7 @@ defmodule TodoAppWeb.TaskLive.Index do
 
   alias TodoApp.Todos
   alias TodoApp.Todos.Task
+  alias ExVoix.ModelContext.Tool
 
   @impl true
   def mount(params, session, socket) do
@@ -106,6 +107,15 @@ defmodule TodoAppWeb.TaskLive.Index do
     tsk = %{id: task.id, task: task}
 
     {:noreply, stream_delete(socket, :tasks, tsk)}
+  end
+
+  @impl true
+  def handle_event("call", params, socket) do
+    IO.inspect(params, label: "params in call event")
+
+    Tool.call(params)
+
+    {:noreply, socket}
   end
 
   defp task_changeset_from(params = %{}) do

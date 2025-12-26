@@ -26,7 +26,7 @@ defmodule ExVoix.ModelContext.Registry do
     mcp_names
   end
 
-  def load_tool(mcp, name) do
+  def load_tool(mcp, name, exact_name \\ true) do
     result =
       case mcp.list_tools() do
         {:ok, result} ->
@@ -43,10 +43,18 @@ defmodule ExVoix.ModelContext.Registry do
     # IO.inspect(tools)
     cond do
       is_map(tools) ->
-        Enum.filter(tools |> Map.keys(), fn t -> t == name end)
+        if exact_name do
+          Enum.filter(tools |> Map.keys(), fn t -> t == name end)
+        else
+          Enum.filter(tools |> Map.keys(), fn t -> String.contains?(name, t) end)
+        end
 
       true ->
-        Enum.filter(tools, fn t -> not is_nil(Map.get(t, "name")) and Map.get(t, "name") == name end)
+        if exact_name do
+          Enum.filter(tools, fn t -> not is_nil(Map.get(t, "name")) and Map.get(t, "name") == name end)
+        else
+          Enum.filter(tools, fn t -> not is_nil(Map.get(t, "name")) and String.contains?(name, Map.get(t, "name")) end)
+        end
 
     end
   end

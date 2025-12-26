@@ -7,6 +7,7 @@ defmodule TodoAppMCP.Components.CompleteTask do
     type: :tool
 
   alias Anubis.Server.Response
+  alias TodoApp.Todos
 
   schema do
     field :id, :integer, required: true
@@ -24,9 +25,13 @@ defmodule TodoAppMCP.Components.CompleteTask do
   end
 
   @impl true
-  def execute(_params, frame) do
+  def execute(%{
+    id: id,
+    completed: value
+  } = _params, frame) do
 
-    response = %{}
-    {:reply, Response.tool() |> Response.json(response), frame}
+    task = Todos.get_task!(id)
+    {:ok, tsk} = Todos.update_task(task, %{"completed" => value})
+    {:reply, Response.tool() |> Response.json(tsk), frame}
   end
 end

@@ -73,7 +73,7 @@ defmodule ExVoix.Html.Components do
 
     ~H"""
       <context name={@name}>
-        {@content}
+        {raw(@content)}
       </context>
     """
   end
