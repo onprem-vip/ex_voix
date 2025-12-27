@@ -43,6 +43,9 @@ The VOIX framework is a recent research development from researchers at TU Darms
 * [The future of AI browsing may depend on developers rethinking how they build websites](https://the-decoder.com/the-future-of-ai-browsing-may-depend-on-developers-rethinking-how-they-build-websites/)
 * [VOIX Documentation](https://svenschultze.github.io/VOIX/)
 
+## Original Source Repository
+https://github.com/svenschultze/VOIX
+
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
