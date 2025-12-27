@@ -13,7 +13,7 @@ The primary challenge the VOIX framework addresses is the difficulty AI agents c
 ## Key Features and Mechanics
 
 Declarative HTML Elements: 
-OIX introduces two main HTML tags:
+VOIX introduces two main HTML tags:
 
 ```pre
 <tool>: Used by developers to define specific actions an AI agent can perform on the site, such as "add to cart" or "book a flight".
