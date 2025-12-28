@@ -28,7 +28,7 @@ defmodule ExVoix.MixProject do
       maintainers: ["Iskandar Rizki"],
       licenses: ["MIT"],
       links: %{
-        "GitHub" => "https://github.com/voix-id/ex_voix",
+        "GitHub" => "https://github.com/onprem-vip/ex_voix",
         # "Docs" => "hexdocs.pm"
       }
     ]
