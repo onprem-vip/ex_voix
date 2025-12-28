@@ -54,7 +54,7 @@ by adding `ex_voix` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:ex_voix, "~> 0.1.5"}
+    {:ex_voix, "~> 0.1.6"}
   ]
 end
 ```
