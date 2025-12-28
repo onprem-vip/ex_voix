@@ -64,6 +64,19 @@ end
 - Add {:ex_voix, "~> x.x.x"} to your mix.exs, fill x.x.x with ex_voix latest version
 - Add the client for your MCP Server by adding MCP Client inside your project, you can see how to do it from examples/todo_app or
   see the [Anubis MCP Client documentation](https://hexdocs.pm/anubis_mcp/building-a-client.html)
+- Add below line in file ex: todo_app/lib/todo_app_web.ex
+  ```elixir
+  ...
+  def live_view do
+    quote do
+      use Phoenix.LiveView
+      import ExVoix.Html.Components # -> Add this line
+
+      unquote(html_helpers())
+    end
+  end
+  ...
+  ```
 - Add voix_event_handler LiveView Hook, 
   ```javascript
     // assets/js/app.js file
@@ -83,7 +96,7 @@ end
     })
     ...
   ```
-- Add <.tool /> or <.context /> element in heex template, ex: todo_app/todo_app_web/live/task_live/index.html.heex
+- Add <.tool /> or <.context /> element in heex template, ex: todo_app/lib/todo_app_web/live/task_live/index.html.heex
   ```html
     ...
                 <.tool mcp={@todo_mcp} name="complete_task" item_id={id} item_label={task.text} />
@@ -96,7 +109,7 @@ end
     ...
 
   ```
-- Add event handler when voix tool call is triggered, ex: todo_app/todo_app_web/live/task_live/index.ex
+- Add event handler when voix tool call is triggered, ex: todo_app/lib/todo_app_web/live/task_live/index.ex
   ```elixir
   ...
   @impl true

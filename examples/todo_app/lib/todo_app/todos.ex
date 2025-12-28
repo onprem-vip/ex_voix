@@ -120,7 +120,11 @@ defmodule TodoApp.Todos do
       "totalTasks" => list_tasks() |> length(),
       "completedTasks" => list_tasks(%{"completed" => true}) |> length(),
       "activeTasks" => list_tasks(%{"completed" => false}) |> length(),
-      "lastUpdatedTask" => get_last_task() |> Map.get(:updated_at)
+      "lastUpdatedTask" => get_last_task() |> Map.get(:updated_at),
+      "completionPercentage" => (if (list_tasks() |> length()) != 0,
+        do: (list_tasks(%{"completed" => true}) |> length()) / (list_tasks() |> length()),
+        else: 0
+        )
     }
   end
 end
