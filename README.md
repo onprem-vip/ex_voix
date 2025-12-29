@@ -59,7 +59,7 @@ def deps do
 end
 ```
 
-## Integration Steps for your Phoenix.LiveView Project
+## Integration Steps for Phoenix.LiveView Project
 - Create Elixir Phoenix framework Project
 - Add {:ex_voix, "~> x.x.x"} to your mix.exs, fill x.x.x with ex_voix latest version
 - Add the client for your MCP Server by adding MCP Client inside your project, you can see how to do it from examples/todo_app or
