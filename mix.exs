@@ -4,7 +4,7 @@ defmodule ExVoix.MixProject do
   def project do
     [
       app: :ex_voix,
-      version: "0.2.1",
+      version: "0.2.2",
       elixir: "~> 1.18",
       start_permanent: Mix.env() == :prod,
       package: package(),

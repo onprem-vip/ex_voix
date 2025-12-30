@@ -43,6 +43,7 @@ defmodule ExVoix.ModelContext.Tool do
                 nil ->
                   resource
                   |> Map.put("tool", tool_name)
+                  |> Map.put("isError", false)
                 decoded ->
                   cond do
                     is_map(decoded) ->
@@ -87,6 +88,7 @@ defmodule ExVoix.ModelContext.Tool do
                 nil ->
                   resource
                   |> Map.put("tool", tool_name)
+                  |> Map.put("isError", true)
                 decoded ->
                   cond do
                     is_map(decoded) ->
