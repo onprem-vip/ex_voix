@@ -40,11 +40,21 @@ defmodule ExVoix.ModelContext.Tool do
             {
               :ok,
               case Map.get(resource, "text") |> json_decode do
-                decoded ->
-                  if is_map(decoded) and Map.has_key?(decoded, "isError"),
-                    do: decoded,
-                    else: Map.put(decoded, "isError", false)
+                nil ->
+                  resource
                   |> Map.put("tool", tool_name)
+                decoded ->
+                  cond do
+                    is_map(decoded) ->
+                      if Map.has_key?(decoded, "isError"),
+                        do: decoded,
+                        else: Map.put(decoded, "isError", false)
+                      |> Map.put("tool", tool_name)
+
+                    true ->
+                      decoded
+
+                  end
               end
             }
 
@@ -73,14 +83,22 @@ defmodule ExVoix.ModelContext.Tool do
             resource = Map.get(content, "resource")
             IO.puts("Tool error: #{inspect(Map.get(resource, "text"))}")
             {:ok,
-              case content |> Map.get("text") |> json_decode do
+              case Map.get(resource, "text") |> json_decode do
                 nil ->
-                  content |> Map.get("text")
-                decoded ->
-                  if is_map(decoded) and Map.has_key?(decoded, "isError"),
-                    do: decoded,
-                    else: Map.put(decoded, "isError", true)
+                  resource
                   |> Map.put("tool", tool_name)
+                decoded ->
+                  cond do
+                    is_map(decoded) ->
+                      if Map.has_key?(decoded, "isError"),
+                        do: decoded,
+                        else: Map.put(decoded, "isError", false)
+                      |> Map.put("tool", tool_name)
+
+                    true ->
+                      decoded
+
+                  end
               end
             }
 
