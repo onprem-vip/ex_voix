@@ -54,7 +54,7 @@ by adding `ex_voix` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:ex_voix, "~> 0.1.6"}
+    {:ex_voix, "~> 0.2.0"}
   ]
 end
 ```
@@ -158,7 +158,8 @@ end
 
 ## TODO
 - [V] FastMCP integration (See [here for example](https://github.com/onprem-vip/todo_mcp_ui))
-- [ ] MCP-UI integration
+- [V] MCP-UI integration
+- [ ] N8N Integration
 
 ## License
 Released under the MIT License.
