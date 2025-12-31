@@ -137,67 +137,62 @@ defmodule TodoAppWeb.TaskLive.Index do
     case Tool.call(params) do
       nil ->
         {:noreply, socket}
+
       {:ok, res} ->
         IO.inspect(res, label: "call result")
-        if is_map(res) and not Map.get(res, "isError", true) do
-          case Map.get(res, "tool") do
-            "add_task" ->
-              {:noreply,
-                socket
-                  |> assign(:stats, stats())
-                  |> assign(:current_date, current_date())
-                  |> stream_insert(:tasks, maybe_extract_item(res))}
+        {:noreply, tool_call_action(socket, res)}
 
-            "complete_task" ->
-              {:noreply,
-                socket
-                  |> assign(:stats, stats())
-                  |> assign(:current_date, current_date())
-                  |> stream_insert(:tasks, maybe_extract_item(res))}
+    end
+  end
 
-            "remove_task" ->
-              {:noreply,
-                socket
-                  |> assign(:stats, stats())
-                  |> assign(:current_date, current_date())
-                  |> stream_delete(:tasks, maybe_extract_item(res))}
+  defp tool_call_action(socket, res) do
+    if is_map(res) and not Map.get(res, "isError", true) do
+      case Map.get(res, "tool") do
+        "add_task" ->
+          socket
+            |> assign(:stats, stats())
+            |> assign(:current_date, current_date())
+            |> stream_insert(:tasks, maybe_extract_item(res))
 
-            "show_update_task_form" ->
-              IO.inspect(Map.get(res, "text"))
-              socket =
-                socket |> assign(:code, LvJs.eval(Map.get(res, "text")))
+        "complete_task" ->
+          socket
+            |> assign(:stats, stats())
+            |> assign(:current_date, current_date())
+            |> stream_insert(:tasks, maybe_extract_item(res))
 
-              payload = %{to: "#task_script", attr: "data-js-command"}
-              {:noreply,
-                socket
-                |> push_event("js-exec", payload)
-              }
+        "remove_task" ->
+          socket
+            |> assign(:stats, stats())
+            |> assign(:current_date, current_date())
+            |> stream_delete(:tasks, maybe_extract_item(res))
 
-            "close_update_task_form" ->
-              IO.inspect(Map.get(res, "text"))
-              socket =
-                socket |> assign(:code, LvJs.eval(Map.get(res, "text")))
+        "show_update_task_form" ->
+          socket =
+            socket |> assign(:code, LvJs.eval(Map.get(res, "text")))
 
-              payload = %{to: "#update_task_script", attr: "data-js-command"}
-              {:noreply,
-                socket
-                |> push_event("js-exec", payload)
-              }
-          end
-        else
-          tasks =
-            Todos.list_tasks()
-            # |> Enum.with_index()
-            |> Enum.map(fn t -> %{id: t.id, task: t} end)
+          payload = %{to: "#task_script", attr: "data-js-command"}
+          socket
+          |> push_event("js-exec", payload)
 
-          {:noreply,
-            socket
-              |> assign(:stats, stats())
-              |> assign(:current_date, current_date())
-              |> stream(:tasks, tasks, reset: true)
-          }
-        end
+        "close_update_task_form" ->
+          IO.inspect(Map.get(res, "text"))
+          socket =
+            socket |> assign(:code, LvJs.eval(Map.get(res, "text")))
 
+          payload = %{to: "#update_task_script", attr: "data-js-command"}
+          socket
+          |> push_event("js-exec", payload)
+      end
+    else
+      tasks =
+        Todos.list_tasks()
+        # |> Enum.with_index()
+        |> Enum.map(fn t -> %{id: t.id, task: t} end)
+
+      socket
+        |> assign(:stats, stats())
+        |> assign(:current_date, current_date())
+        |> stream(:tasks, tasks, reset: true)
     end
   end
 
