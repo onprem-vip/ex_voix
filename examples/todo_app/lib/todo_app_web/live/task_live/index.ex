@@ -172,7 +172,7 @@ defmodule TodoAppWeb.TaskLive.Index do
 
           payload = %{to: "#task_script", attr: "data-js-command"}
           socket
-          |> push_event("js-exec", payload)
+          |> push_event("lvjs-exec", payload)
 
         "close_update_task_form" ->
           IO.inspect(Map.get(res, "text"))
@@ -181,7 +181,7 @@ defmodule TodoAppWeb.TaskLive.Index do
 
           payload = %{to: "#update_task_script", attr: "data-js-command"}
           socket
-          |> push_event("js-exec", payload)
+          |> push_event("lvjs-exec", payload)
       end
     else
       tasks =
