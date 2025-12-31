@@ -1,5 +1,6 @@
-defmodule TodoAppWeb.Utils.LvJs do
+defmodule ExVoix.Utils.LvJs do
 
+  # TODO: evaluate this, inspect from security point of view
   def eval(text) do
     {value, _} =
       text
