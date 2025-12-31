@@ -60,8 +60,8 @@ MCP-UI created by Ido Salomon and Liad Yosef, standardizes a mechanism for agent
 * [MCP-UI: The Future of Agentic Interfaces](https://block.github.io/goose/blog/2025/08/25/mcp-ui-future-agentic-interfaces/)
 
 ## Original Source Repository
-https://github.com/svenschultze/VOIX
-https://github.com/MCP-UI-Org/mcp-ui
+* [VOIX Github](https://github.com/svenschultze/VOIX)
+* [MCP-UI Github](https://github.com/MCP-UI-Org/mcp-ui)
 
 ## Installation
 
