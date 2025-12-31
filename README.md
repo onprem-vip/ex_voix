@@ -109,12 +109,12 @@ end
     ...
     import topbar from "../vendor/topbar"
     import VoixEventHandler from "../../deps/ex_voix/lib/ex_voix/js/voix_event_handler"
-    import JsExecHandler from "../../deps/ex_voix/lib/ex_voix/js/js_exec_handler"
+    import LvjsExecHandler from "../../deps/ex_voix/lib/ex_voix/js/lvjs_exec_handler"
 
     // declare Hooks
     let Hooks = {};
     Hooks.VoixEventHandler = VoixEventHandler;
-    Hooks.JsExecHandler = JsExecHandler;
+    Hooks.LvjsExecHandler = LvjsExecHandler;
 
     const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
     const liveSocket = new LiveSocket("/live", Socket, {
@@ -124,7 +124,7 @@ end
     })
     ...
   ```
-- Add <.tool />, <.context /> and <.jsexec /> element in heex template, ex: todo_app/lib/todo_app_web/live/task_live/index.html.heex
+- Add <.tool />, <.context /> and <.lvjsexec /> element in heex template, ex: todo_app/lib/todo_app_web/live/task_live/index.html.heex
   ```html
     <div>
     ...
@@ -139,7 +139,7 @@ end
 
     </form>
     </div>
-    <.jsexec id="task_script" js_code={@code} />
+    <.lvjsexec id="task_script" js_code={@code} />
     ...
 
   ```
