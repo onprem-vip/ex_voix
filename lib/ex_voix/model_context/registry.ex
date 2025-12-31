@@ -10,6 +10,7 @@ defmodule ExVoix.ModelContext.Registry do
         pid ->
           res =
             case Process.info(pid, :dictionary) do
+              nil -> []
               {:dictionary, res} -> res
               {:error, _} -> []
             end
