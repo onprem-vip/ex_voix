@@ -1,4 +1,4 @@
-defmodule TodoAppMCP.UI.ExternalUrlPayload do
+defmodule ExVoix.ModelContext.UI.ExternalUrlPayload do
 
   @type t :: %__MODULE__{
     type: String.t(),

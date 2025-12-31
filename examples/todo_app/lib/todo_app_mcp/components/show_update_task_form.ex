@@ -7,9 +7,9 @@ defmodule TodoAppMCP.Components.ShowUpdateTaskForm do
     type: :tool
 
   alias Anubis.Server.Response
-  alias TodoAppMCP.UIResource
-  alias TodoAppMCP.UIResource.EncodingType
-  alias TodoAppMCP.UI.RawHtmlPayload
+  alias ExVoix.ModelContext.UIResource
+  alias ExVoix.ModelContext.UIResource.EncodingType
+  alias ExVoix.ModelContext.UI.RawHtmlPayload
 
   schema do
     field :id, :integer, required: true

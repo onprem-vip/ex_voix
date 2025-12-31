@@ -1,4 +1,4 @@
-defmodule TodoAppMCP.UI.RemoteDomPayload do
+defmodule ExVoix.ModelContext.UI.RemoteDomPayload do
 
   @type t :: %__MODULE__{
     type: String.t(),

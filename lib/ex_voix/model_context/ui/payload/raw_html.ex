@@ -1,4 +1,4 @@
-defmodule TodoAppMCP.UI.RawHtmlPayload do
+defmodule ExVoix.ModelContext.UI.RawHtmlPayload do
 
   @type t :: %__MODULE__{
     type: String.t(),

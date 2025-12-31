@@ -1,4 +1,4 @@
-defmodule TodoAppMCP.UIActionResult do
+defmodule ExVoix.ModelContext.UIActionResult do
 
   @type t :: %__MODULE__{
           type: String.t() | nil,
