@@ -14,12 +14,17 @@ defmodule ExVoix.Utils.LvJs do
 
   defp in_module(ast, mod) do
     quote do
-      require unquote(Phoenix.LiveView.JS)
-      import unquote(Phoenix.VerifiedRoutes)
+      alias unquote(Phoenix.LiveView.JS)
+      # import unquote(Phoenix.VerifiedRoutes)
       import unquote(mod)
       # prevent Kernel.exit and others to be in scope
       # only allow function from the given module
-      import Kernel, only: []
+      # TODO: put more restricted functions for doing the eval
+      import Kernel, except: [
+        exit: 1, dbg: 0, dbg: 1, dbg: 2, spawn: 1, spawn: 3, spawn_link: 1, spawn_link: 3, spawn_monitor: 1, spawn_monitor: 3,
+        defimpl: 2, defimpl: 3, defmacro: 1, defmacro: 2, defmacrop: 1, defmacrop: 2, defoverridable: 1, defprotocol: 2,
+        alias!: 1,
+      ]
       unquote(ast)
     end
   end
@@ -28,14 +33,15 @@ defmodule ExVoix.Utils.LvJs do
     ast
     |> Macro.prewalk(fn
       # dont allow remote function calls
-      # evil = {{:., _, _}, _, _} ->
+      code = {{:., _, c}, _, _} ->
         # IO.inspect(c)
-        # case c do
-        #   [{:__aliases__, _, [:JS]}, _] -> evil
-        #   _ ->
-        #     IO.puts("warning: removed non local call #{inspect(evil)}")
-        #     nil
-        # end
+        case c do
+          [{:__aliases__, _, [:JS]}, _] -> code
+
+          _ ->
+            IO.puts("warning: removed non local call #{inspect(code)}")
+            nil
+        end
         # IO.puts("warning: removed non local call #{inspect(evil)}")
         # nil
 

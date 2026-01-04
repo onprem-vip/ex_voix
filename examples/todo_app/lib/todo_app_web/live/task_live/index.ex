@@ -175,7 +175,6 @@ defmodule TodoAppWeb.TaskLive.Index do
           |> push_event("lvjs-exec", payload)
 
         "close_update_task_form" ->
-          IO.inspect(Map.get(res, "text"))
           socket =
             socket |> assign(:code, LvJs.eval(Map.get(res, "text")))
 

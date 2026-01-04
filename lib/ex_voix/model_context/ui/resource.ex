@@ -10,6 +10,7 @@ defmodule ExVoix.ModelContext.UIResource do
     value UriList, "text/uri-list"
     value ReactRemoteDom, "application/vnd.mcp-ui.remote-dom+javascript; framework=react"
     value WebComponentsRemoteDom, "application/vnd.mcp-ui.remote-dom+javascript; framework=webcomponents"
+    value LiveviewJSRemoteDom, "application/vnd.mcp-ui.remote-dom+javascript; framework=liveviewjs"
   end
 
   defenum UIActionType do
@@ -43,13 +44,17 @@ defmodule ExVoix.ModelContext.UIResource do
   end
 
   # TODO: Check below for more approriate format from MCP-UI
-  def create_response_from(%__MODULE__{} = ui_resource) do
+  def create_response_from(response, %__MODULE__{} = ui_resource) do
     mime_type =
       case ui_resource.content do
         %RawHtmlPayload{} -> ExVoix.ModelContext.UIResource.MimeType.Html
         %ExternalUrlPayload{} -> ExVoix.ModelContext.UIResource.MimeType.UriList
-        %RemoteDomPayload{framework: "react"} -> ExVoix.ModelContext.UIResource.MimeType.ReactRemoteDom
-        %RemoteDomPayload{framework: "webcomponents"} -> ExVoix.ModelContext.UIResource.MimeType.WebComponentsRemoteDom
+        %RemoteDomPayload{} = payload ->
+          cond do
+            payload.framework == "react" -> ExVoix.ModelContext.UIResource.MimeType.ReactRemoteDom
+            payload.framework == "webcomponents" -> ExVoix.ModelContext.UIResource.MimeType.WebComponentsRemoteDom
+            payload.framework == "liveviewjs" -> ExVoix.ModelContext.UIResource.MimeType.LiveviewJSRemoteDom
+          end
       end
 
     content_response =
@@ -57,19 +62,54 @@ defmodule ExVoix.ModelContext.UIResource do
         %RawHtmlPayload{} = payload -> payload.html_string
         %ExternalUrlPayload{} = payload when not is_nil(payload.iframe_url) -> payload.iframe_url
         %ExternalUrlPayload{} = payload when not is_nil(payload.target_url) ->
-          %{target_url: payload.target_url, script_code: payload.script_code} |> :json.encode() |> IO.iodata_to_binary()
+          %{target_url: payload.target_url, script_code: payload.script_code}
         %RemoteDomPayload{} = payload -> payload.script
       end
 
     case ui_resource.encoding.value() do
       "text" ->
-        Response.resource()
-        |> Response.text(content_response)
-        |> Response.to_protocol(ui_resource.uri, mime_type.value())
+        case response.type do
+          :tool ->
+            response
+            |> Response.embedded_resource(ui_resource.uri,
+              name: nil,
+              mime_type: mime_type.value(),
+              text: content_response
+            )
+          :resource ->
+            response
+            |> Response.text(content_response)
+            |> Response.to_protocol(ui_resource.uri, mime_type.value())
+        end
+        # %{
+        #   "resource" =>
+          # Response.resource()
+          # |> Response.text(content_response)
+          # |> Response.to_protocol(ui_resource.uri, mime_type.value())
+        #   "type" => "resource"
+        # }
+
       "blob" ->
-        Response.resource()
-        |> Response.blob(content_response)
-        |> Response.to_protocol(ui_resource.uri, mime_type.value())
+        case response.type do
+          :tool ->
+            response
+            |> Response.embedded_resource(ui_resource.uri,
+              name: nil,
+              mime_type: mime_type.value(),
+              blob: content_response
+            )
+          :resource ->
+            response
+            |> Response.blob(content_response)
+            |> Response.to_protocol(ui_resource.uri, mime_type.value())
+        end
+        # %{
+        #   "resource" =>
+          # Response.resource()
+          # |> Response.blob(content_response)
+          # |> Response.to_protocol(ui_resource.uri, mime_type.value())
+        #   "type" => "resource"
+        # }
     end
   end
 end

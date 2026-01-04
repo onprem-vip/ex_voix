@@ -17,8 +17,13 @@ defmodule ExVoix.ModelContext.UI.RemoteDomPayload do
     struct!(__MODULE__, attrs)
   end
 
-  def new(_attrs) do
-    raise("Unknown remote dom framework!")
+  def new(%{framework: "liveviewjs", script: _script} = attrs) do
+    struct!(__MODULE__, attrs)
   end
+
+  # TODO: using scrapyteer for alternative scrape method
+  # def new(%{framework: "scrapyteer", script: _script} = attrs) do
+  #   struct!(__MODULE__, attrs)
+  # end
 
 end

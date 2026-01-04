@@ -9,7 +9,7 @@ defmodule TodoAppMCP.Components.CloseUpdateTaskForm do
   alias Anubis.Server.Response
   alias ExVoix.ModelContext.UIResource
   alias ExVoix.ModelContext.UIResource.EncodingType
-  alias ExVoix.ModelContext.UI.RawHtmlPayload
+  alias ExVoix.ModelContext.UI.RemoteDomPayload
 
   schema do
     #field :id, :integer, required: true
@@ -28,21 +28,24 @@ defmodule TodoAppMCP.Components.CloseUpdateTaskForm do
   @impl true
   def execute(_params, frame) do
     interactive_js = """
-    Phoenix.LiveView.JS.patch("/tasks")
+    JS.patch("/tasks")
     """
-    raw_html = RawHtmlPayload.new(%{html_string: interactive_js})
+    lvjs_payload = RemoteDomPayload.new(%{
+      framework: "liveviewjs",
+      script: interactive_js
+    })
 
     resource = UIResource.new(
       %{
         uri: "ui://todo_app/task-form",
-        content: raw_html,
+        content: lvjs_payload,
         encoding: EncodingType.Text,
         # ui_metadata: %{},
         # metadata: %{}
       }
     )
-    response = UIResource.create_response_from(resource)
+    response = UIResource.create_response_from(Response.tool(), resource)
 
-    {:reply, Response.tool() |> Response.json(response), frame}
+    {:reply, response, frame}
   end
 end
