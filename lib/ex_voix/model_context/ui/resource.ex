@@ -2,15 +2,14 @@ defmodule ExVoix.ModelContext.UIResource do
   use EnumType
 
   alias Anubis.Server.Response
-  alias ExVoix.ModelContext.UI.{RawHtmlPayload, ExternalUrlPayload, RemoteDomPayload}
-  # alias
+  alias ExVoix.ModelContext.UI.{RawHtmlPayload, ExternalUrlPayload, RemoteDomPayload, DomPatchingPayload}
 
   defenum MimeType do
     value Html, "text/html"
     value UriList, "text/uri-list"
     value ReactRemoteDom, "application/vnd.mcp-ui.remote-dom+javascript; framework=react"
     value WebComponentsRemoteDom, "application/vnd.mcp-ui.remote-dom+javascript; framework=webcomponents"
-    value LiveviewJSRemoteDom, "application/vnd.mcp-ui.remote-dom+javascript; framework=liveviewjs"
+    value LiveviewJSDomPatching, "application/vnd.ex-voix.dom-patching+javascript; framework=liveviewjs"
   end
 
   defenum UIActionType do
@@ -53,7 +52,11 @@ defmodule ExVoix.ModelContext.UIResource do
           cond do
             payload.framework == "react" -> ExVoix.ModelContext.UIResource.MimeType.ReactRemoteDom
             payload.framework == "webcomponents" -> ExVoix.ModelContext.UIResource.MimeType.WebComponentsRemoteDom
-            payload.framework == "liveviewjs" -> ExVoix.ModelContext.UIResource.MimeType.LiveviewJSRemoteDom
+          end
+        %DomPatchingPayload{} = payload ->
+          cond do
+            payload.framework == "liveviewjs" -> ExVoix.ModelContext.UIResource.MimeType.LiveviewJSDomPatching
+            true -> ExVoix.ModelContext.UIResource.MimeType.LiveviewJSDomPatching
           end
       end
 
@@ -64,6 +67,7 @@ defmodule ExVoix.ModelContext.UIResource do
         %ExternalUrlPayload{} = payload when not is_nil(payload.target_url) ->
           %{target_url: payload.target_url, script_code: payload.script_code}
         %RemoteDomPayload{} = payload -> payload.script
+        %DomPatchingPayload{} = payload -> payload.script
       end
 
     case ui_resource.encoding.value() do
@@ -81,13 +85,6 @@ defmodule ExVoix.ModelContext.UIResource do
             |> Response.text(content_response)
             |> Response.to_protocol(ui_resource.uri, mime_type.value())
         end
-        # %{
-        #   "resource" =>
-          # Response.resource()
-          # |> Response.text(content_response)
-          # |> Response.to_protocol(ui_resource.uri, mime_type.value())
-        #   "type" => "resource"
-        # }
 
       "blob" ->
         case response.type do
@@ -103,13 +100,7 @@ defmodule ExVoix.ModelContext.UIResource do
             |> Response.blob(content_response)
             |> Response.to_protocol(ui_resource.uri, mime_type.value())
         end
-        # %{
-        #   "resource" =>
-          # Response.resource()
-          # |> Response.blob(content_response)
-          # |> Response.to_protocol(ui_resource.uri, mime_type.value())
-        #   "type" => "resource"
-        # }
+
     end
   end
 end

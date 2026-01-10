@@ -53,7 +53,7 @@ By providing a clear, non-visual description of website actions, the framework c
 ## Status and Adoption
 The VOIX framework is a recent research development from researchers at TU Darmstadt and is part of a movement toward the "Agentic Web," where new standards are needed to facilitate reliable AI interaction. While initial studies show promising results in its practicality and performance, its success ultimately depends on ecosystem-wide adoption and further standardization efforts. 
 
-MCP-UI created by Ido Salomon and Liad Yosef, standardizes a mechanism for agents to embed user interfaces directly within the conversation flow, treating them as a first-class content type. The technology is highlighted when Shopify Engineering and Block publicly announce their support and implementation of MCP-UI to enable "agentic commerce" experiences.
+MCP-UI created by Ido Salomon and Liad Yosef, standardizes a mechanism for agents to embed user interfaces directly within the conversation flow or any UI flow, treating them as a first-class content type. The technology is highlighted when Shopify Engineering and Block publicly announce their support and implementation of MCP-UI to enable "agentic commerce" experiences.
 
 ## More Articles
 * [Building the Web for Agents: A Declarative Framework for Agent-Web Interaction](https://huggingface.co/papers/2511.11287)
@@ -112,12 +112,10 @@ end
     ...
     import topbar from "../vendor/topbar"
     import VoixEventHandler from "../../deps/ex_voix/lib/ex_voix/js/voix_event_handler"
-    import LvjsExecHandler from "../../deps/ex_voix/lib/ex_voix/js/lvjs_exec_handler"
 
     // declare Hooks
     let Hooks = {};
     Hooks.VoixEventHandler = VoixEventHandler;
-    Hooks.LvjsExecHandler = LvjsExecHandler;
 
     const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
     const liveSocket = new LiveSocket("/live", Socket, {
@@ -142,7 +140,7 @@ end
 
     </form>
     </div>
-    <.lvjsexec id="task_script" js_code={@code} />
+    <.lvjsexec id="executable_script" js_code={@code} />
     ...
 
   ```
@@ -184,7 +182,7 @@ end
               socket =
                 socket |> assign(:code, LvJs.eval(Map.get(res, "text")))
 
-              payload = %{to: "#task_script", attr: "data-js-command"}
+              payload = %{to: "#executable_script"}
               {:noreply,
                 socket
                 |> push_event("lvjs-exec", payload)
@@ -195,7 +193,7 @@ end
               socket =
                 socket |> assign(:code, LvJs.eval(Map.get(res, "text")))
 
-              payload = %{to: "#update_task_script", attr: "data-js-command"}
+              payload = %{to: "#executable_script"}
               {:noreply,
                 socket
                 |> push_event("lvjs-exec", payload)

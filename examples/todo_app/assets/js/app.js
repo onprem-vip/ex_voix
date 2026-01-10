@@ -25,11 +25,9 @@ import {LiveSocket} from "phoenix_live_view"
 import {hooks as colocatedHooks} from "phoenix-colocated/todo_app"
 import topbar from "../vendor/topbar"
 import VoixEventHandler from "../../../../lib/ex_voix/js/voix_event_handler"
-import LvjsExecHandler from "../../../../lib/ex_voix/js/lvjs_exec_handler"
 
 let Hooks = {};
 Hooks.VoixEventHandler = VoixEventHandler;
-Hooks.LvjsExecHandler = LvjsExecHandler;
 
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 const liveSocket = new LiveSocket("/live", Socket, {

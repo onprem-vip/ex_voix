@@ -93,7 +93,7 @@ defmodule ExVoix.Html.Components do
 
   def lvjsexec(assigns) do
     ~H"""
-    <div id={@id} class="mt-4 space-y-5 bg-white hidden" data-js-command={@js_code} phx-hook="LvjsExecHandler">
+    <div id={@id} class="mt-4 space-y-5 bg-white hidden" value-js-code={@js_code} phx-hook="VoixEventHandler">
     </div>
     """
   end
