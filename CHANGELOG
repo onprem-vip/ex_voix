@@ -1,0 +1,7 @@
+- Initial Log, 2026-01-12 (ver. 0.3.5)
+    * implement mcp-ui js handler (ui-resource-render push_event) for remote-dom with webcomponents and react framework
+    * implement mcp-ui js handler (ui-resource-render push_event) for JS command in liveviewjs
+    * add .ui_resource_renderer element for JS Command in liveviewjs
+    * update examples, implement show_stats_window
+    * update examples, simplify execute_remote_code
+    * update README.md

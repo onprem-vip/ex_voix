@@ -23,7 +23,7 @@ defmodule ExVoix.ModelContext.Tool do
           else
             detail
           end
-        IO.inspect(detail, label: "detail in call event")
+        # IO.inspect(detail, label: "detail in call event")
         call_tool_response(mcp, Map.get(tool_info, "name"), detail)
 
       end

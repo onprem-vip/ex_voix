@@ -73,7 +73,6 @@ defmodule TodoAppWeb.TaskLive.Index do
 
   defp apply_action(socket, :index, params) do
     task_changeset = task_changeset_from(params)
-    # IO.inspect(task_changeset, label: "Task from params")
 
     socket
     |> assign(:page_title, "Todo App · Tasks")
@@ -89,7 +88,7 @@ defmodule TodoAppWeb.TaskLive.Index do
 
   @impl true
   def handle_event("add_task", %{"task" => %{"text" => text}}, socket) do
-    IO.inspect(text, label: "add_task text")
+    # IO.inspect(text, label: "add_task text")
     if not is_nil(text) and text != "" do
       socket =
         socket |> assign(:add_task_text, text)
@@ -148,7 +147,7 @@ defmodule TodoAppWeb.TaskLive.Index do
 
   @impl true
   def handle_event("call", params, socket) do
-    IO.inspect(params, label: "params in call event")
+    # IO.inspect(params, label: "params in call event")
 
     case Tool.call(params) do
       nil ->
@@ -194,7 +193,6 @@ defmodule TodoAppWeb.TaskLive.Index do
     else
       tasks =
         Todos.list_tasks()
-        # |> Enum.with_index()
         |> Enum.map(fn t -> %{id: t.id, task: t} end)
 
       socket

@@ -29,5 +29,4 @@ defmodule TodoAppMCP.Runners.KeepAlive do
     {:noreply, state}
   end
 
-
 end

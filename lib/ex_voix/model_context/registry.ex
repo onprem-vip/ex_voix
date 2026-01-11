@@ -23,10 +23,6 @@ defmodule ExVoix.ModelContext.Registry do
         res
       end)
 
-    # IO.inspect(mcp_names)
-    # IO.inspect((mcp_names |> Enum.at(0)).list_tools())
-    # DbLog.put("registered_mcps", mcp_names)
-    # IO.inspect(DbLog.get("registered_mcps", []), label: "registered_mcps")
     mcp_names
   end
 

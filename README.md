@@ -79,7 +79,7 @@ def deps do
 end
 ```
 
-## Integration Steps for Phoenix.LiveView Project
+## Integration Steps for Phoenix.LiveView Project (Required)
 - Create Elixir Phoenix framework Project
 - Add {:ex_voix, "~> x.x.x"} to your mix.exs, fill x.x.x with ex_voix latest version
 - Add the client for your MCP Server by adding MCP Client inside your project, you can see how to do it from examples/todo_app or
@@ -106,6 +106,64 @@ end
   end
   ...
   ```
+- Add event handler when voix tool call is triggered, ex: todo_app/lib/todo_app_web/live/task_live/index.ex
+  ```elixir
+  ...
+  @impl true
+  def handle_event("call", params, socket) do
+    case Tool.call(params) do
+      nil ->
+        {:noreply, socket}
+
+      {:ok, res} ->
+        {:noreply, tool_call_action(socket, res)}
+
+    end
+  end
+
+  defp tool_call_action(socket, res) do
+    if is_map(res) and not Map.get(res, "isError", true) do
+      case Map.get(res, "tool") do
+        "add_task" ->
+          socket
+            |> assign(:stats, stats())
+            |> assign(:current_date, current_date())
+            |> stream_insert(:tasks, maybe_extract_item(res))
+
+        "complete_task" ->
+          socket
+            |> assign(:stats, stats())
+            |> assign(:current_date, current_date())
+            |> stream_insert(:tasks, maybe_extract_item(res))
+
+        "remove_task" ->
+          socket
+            |> assign(:stats, stats())
+            |> assign(:current_date, current_date())
+            |> stream_delete(:tasks, maybe_extract_item(res))
+
+        "show_stats_window" ->
+          socket
+            |> assign(:resource, res)
+            |> push_patch(to: "/tasks/stats")
+
+        _ ->
+          socket |> execute_remote_code("#executable-script", res)
+
+      end
+    else
+      tasks =
+        Todos.list_tasks()
+        |> Enum.map(fn t -> %{id: t.id, task: t} end)
+
+      socket
+        |> assign(:stats, stats())
+        |> assign(:current_date, current_date())
+        |> stream(:tasks, tasks, reset: true)
+    end
+  end
+  ...
+  ```
 - Add voix_event_handler LiveView Hook, 
   ```javascript
     // assets/js/app.js file
@@ -125,7 +183,7 @@ end
     })
     ...
   ```
-- Add <.tool />, <.context /> and <.lvjsexec /> element in heex template, ex: todo_app/lib/todo_app_web/live/task_live/index.html.heex
+- Add <.tool />, <.context /> and <.ui_resource_renderer /> element in heex template, ex: todo_app/lib/todo_app_web/live/task_live/index.html.heex
   ```html
     <div>
     ...
@@ -140,79 +198,75 @@ end
 
     </form>
     </div>
-    <.lvjsexec id="executable_script" js_code={@code} />
+
+    <.ui_resource_renderer id="executable_script" resource={@resource} />
     ...
 
   ```
-- Add event handler when voix tool call is triggered, ex: todo_app/lib/todo_app_web/live/task_live/index.ex
-  ```elixir
+
+## mcp-ui client support for rendering raw-html, external-url or remote-dom from mcp-ui server (optional):
+- Install mcp-ui client with npm or bun in assets directory for rendering mcp-ui in browser
+  ```bash
+  > cd assets
+
+  > npm install @mcp-ui/client
+  or
+  > bun add @mcp-ui/client
+  ```
+- Add mcp ui client component and elements
+  ```javascript
+    // assets/js/app.js file
+    ...
+    import topbar from "../vendor/topbar"
+    import VoixEventHandler from "../../deps/ex_voix/lib/ex_voix/js/voix_event_handler"
+
+    import '@mcp-ui/client/ui-resource-renderer.wc.js';
+    import { 
+      basicComponentLibrary,
+      remoteCardDefinition, 
+      remoteButtonDefinition, 
+      remoteTextDefinition, 
+      remoteStackDefinition, 
+      remoteImageDefinition,
+    } from '@mcp-ui/client';
+    // you can change below component definition with your own design
+    import { defineWebComponents } from '../../deps/ex_voix/lib/ex_voix/js/mcp-ui-client/webcomponents';
+
+    // declare Hooks
+    let Hooks = {};
+    Hooks.VoixEventHandler = VoixEventHandler;
+
+    const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+    const liveSocket = new LiveSocket("/live", Socket, {
+      longPollFallbackMs: 2500,
+      params: {_csrf_token: csrfToken},
+      hooks: {...Hooks, ...colocatedHooks}, // add Hooks to LiveSocket
+    })
+
+    // Prepare for MCP-UI render
+    window.basicComponentLibrary = basicComponentLibrary
+    window.remoteElements = [
+      remoteCardDefinition, 
+      remoteButtonDefinition, 
+      remoteTextDefinition, 
+      remoteStackDefinition, 
+      remoteImageDefinition,
+    ]
+    defineWebComponents();
+    ...
+  ```
+- Add <ui-resource-renderer /> element in heex template, you can place the element anywhere in the template, place it where you want to render the content. Ex: todo_app/lib/todo_app_web/live/task_live/index.html.heex
+  ```html
   ...
-  @impl true
-  def handle_event("call", params, socket) do
-    case Tool.call(params) do
-      nil ->
-        {:noreply, socket}
-
-      {:ok, res} ->
-        if not Map.get(res, "isError") do
-          case Map.get(res, "tool") do
-            "add_task" ->
-              {:noreply,
-                socket
-                  |> assign(:stats, stats())
-                  |> assign(:current_date, current_date())
-                  |> stream_insert(:tasks, maybe_extract_item(res))}
-
-            "complete_task" ->
-              {:noreply,
-                socket
-                  |> assign(:stats, stats())
-                  |> assign(:current_date, current_date())
-                  |> stream_insert(:tasks, maybe_extract_item(res))}
-
-            "remove_task" ->
-              {:noreply,
-                socket
-                  |> assign(:stats, stats())
-                  |> assign(:current_date, current_date())
-                  |> stream_delete(:tasks, maybe_extract_item(res))}
-
-            "show_update_task_form" ->
-              IO.inspect(Map.get(res, "text"))
-              socket =
-                socket |> assign(:code, LvJs.eval(Map.get(res, "text")))
-
-              payload = %{to: "#executable_script"}
-              {:noreply,
-                socket
-                |> push_event("ui-resource-render", payload)
-              }
-
-            "close_update_task_form" ->
-              IO.inspect(Map.get(res, "text"))
-              socket =
-                socket |> assign(:code, LvJs.eval(Map.get(res, "text")))
-
-              payload = %{to: "#executable_script"}
-              {:noreply,
-                socket
-                |> push_event("ui-resource-render", payload)
-              }
-          end          
-        else
-          tasks =
-            Todos.list_tasks()
-            |> Enum.map(fn t -> %{id: t.id, task: t} end)
-
-          {:noreply,
-            socket
-              |> assign(:stats, stats())
-              |> assign(:current_date, current_date())
-              |> stream(:tasks, tasks, reset: true)
-          }
-        end
-    end
-  end
+    <.modal
+        :if={@live_action in [:stats]}
+        id="popup-window"
+        show
+        on_cancel={JS.patch(~p"/tasks")}
+    >
+    <ui-resource-renderer id="remote-code-renderer" phx-hook='VoixEventHandler'></ui-resource-renderer>
+    <.tool mcp={@todo_mcp} name="close_any_form" />
+    </.modal>
   ...
   ```
 

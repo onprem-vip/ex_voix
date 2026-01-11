@@ -79,7 +79,7 @@ defmodule ExVoix.Html.Components do
   end
 
   @doc """
-  Renders a jsexec.
+  Renders a UI resource from mcp-ui.
 
   ## Examples
 
@@ -95,12 +95,12 @@ defmodule ExVoix.Html.Components do
 
     assigns = if Map.has_key?(assigns, :resource) and not is_nil(assigns.resource), do: assigns, else: Map.put(assigns, :resource, %{})
     ~H"""
-    <div id={@id} class="mt-4 space-y-5 bg-white hidden" value-js-code={ eval_js_code(@resource) } phx-hook="VoixEventHandler">
+    <div id={@id} class="mt-4 space-y-5 bg-white hidden" value-js-code={ eval_lvjs_code(@resource) } phx-hook="VoixEventHandler">
     </div>
     """
   end
 
-  defp eval_js_code(resource) do
+  defp eval_lvjs_code(resource) do
     if Map.get(resource, "mimeType", "") == "application/vnd.ex-voix.command+javascript; framework=liveviewjs" do
       LvJs.eval(Map.get(resource, "text", ""))
     else
