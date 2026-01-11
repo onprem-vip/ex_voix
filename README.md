@@ -6,7 +6,7 @@
 
 The VOIX framework is a new, web-native, declarative framework that allows website developers to explicitly define available actions and relevant data for AI agents using simple HTML elements. This approach aims to create a more efficient, secure, and privacy-preserving collaboration between humans and AI on the web. 
 
-MCP-UI is an open-source standard and SDK that extends the basic MCP protocol, allowing AI agents to render rich, interactive web components (like forms, product selectors, maps) directly within chat interfaces, moving beyond text-only responses to create dynamic, application-like experiences for complex tasks like shopping or booking.
+MCP-UI is an open-source standard and SDK that extends the basic MCP protocol, allowing AI agents to render rich, interactive web components (like forms, product selectors, maps) directly within chat interfaces or any app user interfaces, moving beyond text-only responses to create dynamic, rich UI / UX for complex tasks like shopping or booking.
 
 ## Core Concept
 
@@ -34,7 +34,7 @@ MCP-UI: An extension to MCP, providing a way to send interactive UI elements.
 
 UIResource: The core object defining the UI content (HTML, URL, Remote DOM) to be delivered and displayed.
 
-Phoenix LiveView SDK: How the UIResource will be delivered and displayed to the users by Phoenix LiveView.
+Client SDK: How the UIResource will be delivered and displayed to the users by Phoenix LiveView and MCP-UI client renderer.
 ```
 
 **Improved Performance:**
@@ -275,8 +275,9 @@ end
   ```
 - Restart the phoenix server
 
-## More Examples
+## More Examples and Demo
 - FastMCP and MCP-UI integration ([here](https://github.com/onprem-vip/todo_mcp_ui))
+- Demo site: [Voix and MCP-UI Demo](https://demo1.onprem.vip)
 
 ## License
 Released under the MIT License.
