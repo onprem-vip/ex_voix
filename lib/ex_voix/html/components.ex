@@ -5,8 +5,8 @@ defmodule ExVoix.Html.Components do
   use Phoenix.Component
 
   import Phoenix.HTML
-  # alias Phoenix.LiveView.JS
   alias ExVoix.ModelContext.Registry
+  alias ExVoix.Utils.LvJs
 
   @doc """
   Renders a tool element.
@@ -83,18 +83,28 @@ defmodule ExVoix.Html.Components do
 
   ## Examples
 
-      <.lvjsexec id="my_script" js_code={@code} />
+      <.ui_resource_renderer id="my-script" />
   """
   attr :id, :string, required: true,
     doc: "the id of the element"
 
-  attr :js_code, :string, required: true,
-    doc: "liveview JS code from mcp-ui to be executed"
+  attr :resource, :string, required: true,
+    doc: "mcp-ui resource"
 
-  def lvjsexec(assigns) do
+  def ui_resource_renderer(assigns) do
+
+    assigns = if Map.has_key?(assigns, :resource) and not is_nil(assigns.resource), do: assigns, else: Map.put(assigns, :resource, %{})
     ~H"""
-    <div id={@id} class="mt-4 space-y-5 bg-white hidden" value-js-code={@js_code} phx-hook="VoixEventHandler">
+    <div id={@id} class="mt-4 space-y-5 bg-white hidden" value-js-code={ eval_js_code(@resource) } phx-hook="VoixEventHandler">
     </div>
     """
+  end
+
+  defp eval_js_code(resource) do
+    if Map.get(resource, "mimeType", "") == "application/vnd.ex-voix.command+javascript; framework=liveviewjs" do
+      LvJs.eval(Map.get(resource, "text", ""))
+    else
+      ""
+    end
   end
 end

@@ -185,7 +185,7 @@ end
               payload = %{to: "#executable_script"}
               {:noreply,
                 socket
-                |> push_event("lvjs-exec", payload)
+                |> push_event("ui-resource-render", payload)
               }
 
             "close_update_task_form" ->
@@ -196,7 +196,7 @@ end
               payload = %{to: "#executable_script"}
               {:noreply,
                 socket
-                |> push_event("lvjs-exec", payload)
+                |> push_event("ui-resource-render", payload)
               }
           end          
         else

@@ -103,4 +103,5 @@ defmodule ExVoix.ModelContext.UIResource do
 
     end
   end
+
 end

@@ -4,7 +4,6 @@ defmodule TodoAppWeb.TaskLive.Index do
   alias TodoApp.Todos
   alias TodoApp.Todos.Task
   alias ExVoix.ModelContext.Tool
-  alias ExVoix.Utils.LvJs
 
   @impl true
   def mount(params, session, socket) do
@@ -45,12 +44,12 @@ defmodule TodoAppWeb.TaskLive.Index do
 
   defp apply_action(socket, :stats, _params) do
     task_changeset = task_changeset_from(%{})
-    payload = %{to: "#remote-code-renderer", resource: socket.assigns.resource}
+
     socket
     |> assign(:page_title, "Todo App · Stats")
     |> assign(:task, %Task{})
     |> assign(:form, to_form(task_changeset))
-    |> push_event("code-render", payload)
+    |> execute_remote_code("#remote-code-renderer", socket.assigns.resource)
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
@@ -189,7 +188,7 @@ defmodule TodoAppWeb.TaskLive.Index do
             |> push_patch(to: "/tasks/stats")
 
         _ ->
-          socket |> executeRemoteCode(res)
+          socket |> execute_remote_code("#executable-script", res)
 
       end
     else
@@ -216,43 +215,11 @@ defmodule TodoAppWeb.TaskLive.Index do
     %{id: (if is_nil(Map.get(task, "id")), do: task.id, else: Map.get(task, "id")), task: task}
   end
 
-  defp executeRemoteCode(socket, res) do
-    case Map.get(res, "mimeType") do
-      "application/vnd.ex-voix.command+javascript; framework=liveviewjs" ->
-        socket =
-          socket |> assign(:code, LvJs.eval(Map.get(res, "text")))
-
-        payload = %{to: "#executable_script"}
-        socket |> push_event("lvjs-exec", payload)
-
-      "application/vnd.mcp-ui.remote-dom+javascript; framework=webcomponents" ->
-        # TODO:
-        # IO.inspect(Map.get(res, "text"), label: "script code")
-        # socket =
-        #   socket
-        #     |> assign(:remote_code, Map.get(res, "text"))
-        payload = %{to: "#remote-code-renderer", resource: res}
-        socket |> push_event("code-render", payload)
-
-      "text/html" ->
-        # TODO:
-        # socket =
-        #   socket
-        #     |> assign(:remote_code, Map.get(res, "text"))
-        payload = %{to: "#remote-code-renderer", resource: res}
-        socket |> push_event("code-render", payload)
-
-      "text/uri-list" ->
-        # TODO:
-        # socket =
-        #   socket
-        #     |> assign(:remote_code, Map.get(res, "text"))
-        payload = %{to: "#remote-code-renderer", resource: res}
-        socket |> push_event("code-render", payload)
-
-      _ ->
-        socket
-    end
+  defp execute_remote_code(socket, dom_id, res) do
+    payload = %{to: dom_id, resource: res}
+    socket
+      |> assign(:resource, res)
+      |> push_event("ui-resource-render", payload)
   end
 
   defp task_changeset_from(task = %Task{}, params) do
