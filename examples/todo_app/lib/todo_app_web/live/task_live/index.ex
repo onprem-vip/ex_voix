@@ -15,7 +15,6 @@ defmodule TodoAppWeb.TaskLive.Index do
 
     tasks =
       Todos.list_tasks()
-      # |> Enum.with_index()
       |> Enum.map(fn t -> %{id: t.id, task: t} end)
 
     {

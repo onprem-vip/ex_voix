@@ -1,3 +1,5 @@
+[![0.3.6](img.shields.io)](hex.pm)
+
 # ExVoix
 
 **Agentic Web implementation using Phoenix.LiveView**
@@ -82,7 +84,7 @@ end
 ## Integration Steps for Phoenix.LiveView Project (Required)
 - Create Elixir Phoenix framework Project
 - Add {:ex_voix, "~> x.x.x"} to your mix.exs, fill x.x.x with ex_voix latest version
-- Add the client for your MCP Server by adding MCP Client inside your project, you can see how to do it from examples/todo_app or
+- Add the client for your MCP Server by adding MCP Client inside your project, you can see how to do it from examples/todo_app in todo_app_mcp/clients/todo_app_mcp.ex file and register the file in application.ex or
   see the [Anubis MCP Client documentation](https://hexdocs.pm/anubis_mcp/building-a-client.html)
 - Add below line in file ex: todo_app/lib/todo_app_web.ex
   ```elixir
@@ -90,7 +92,7 @@ end
   def live_view do
     quote do
       use Phoenix.LiveView
-      import ExVoix.Html.Components # -> Add this line
+      import ExVoix.Html.Components # <- Add this line
 
       unquote(html_helpers())
     end
@@ -99,7 +101,7 @@ end
   def live_component do
     quote do
       use Phoenix.LiveComponent
-      import ExVoix.Html.Components # -> Add this line
+      import ExVoix.Html.Components # <- Add this line
 
       unquote(html_helpers())
     end
@@ -181,6 +183,28 @@ end
       params: {_csrf_token: csrfToken},
       hooks: {...Hooks, ...colocatedHooks}, // add Hooks to LiveSocket
     })
+    ...
+  ```
+- Add @todo_mcp module in your liveview mount function
+  ```elixir
+    ...
+    @impl true
+    def mount(_params, _session, socket) do
+      tasks =
+        Todos.list_tasks()
+        |> Enum.map(fn t -> %{id: t.id, task: t} end)
+
+      {
+        :ok,
+        socket
+        |> assign(:add_task_text, nil)
+        |> assign(:stats, stats())
+        |> assign(:current_date, current_date())
+        |> assign(:resource, nil)
+        |> assign(:todo_mcp, TodoAppMCP.Clients.TodoAppMCP)
+        |> stream(:tasks, tasks)
+      }
+    end
     ...
   ```
 - Add <.tool />, <.context /> and <.ui_resource_renderer /> element in heex template, ex: todo_app/lib/todo_app_web/live/task_live/index.html.heex
