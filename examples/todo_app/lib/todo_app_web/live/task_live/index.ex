@@ -24,7 +24,6 @@ defmodule TodoAppWeb.TaskLive.Index do
       |> assign(:add_task_text, nil)
       |> assign(:stats, stats())
       |> assign(:current_date, current_date())
-      |> assign(:code, nil)
       |> assign(:resource, nil)
       |> assign(:todo_mcp, TodoAppMCP.Clients.TodoAppMCP)
       |> stream(:tasks, tasks)
