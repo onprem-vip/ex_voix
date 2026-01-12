@@ -186,7 +186,7 @@ end
     })
     ...
   ```
-- Add @todo_mcp module in your liveview mount function
+- Add TodoAppMCP.Clients.TodoAppMCP module as :todo_mcp (or @todo_mcp inside your html.heex file) in your liveview mount function
   ```elixir
     ...
     @impl true
@@ -202,7 +202,7 @@ end
         |> assign(:stats, stats())
         |> assign(:current_date, current_date())
         |> assign(:resource, nil)
-        |> assign(:todo_mcp, TodoAppMCP.Clients.TodoAppMCP)
+        |> assign(:todo_mcp, TodoAppMCP.Clients.TodoAppMCP) # <- add TodoAppMCP.Clients.TodoAppMCP module
         |> stream(:tasks, tasks)
       }
     end
@@ -228,12 +228,13 @@ end
     ...
 
   ```
+  `<.ui_resource_renderer />` element is adding the ability to execute [Liveview JS Command](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.JS.html), the JS Command will be sent from MCP Server, this is part of the MCP-UI payload, added by ExVoix project.
 - Start the phoenix server
   ```bash
   > mix phx.server
   ```
 
-## mcp-ui client support for rendering raw-html, external-url or remote-dom from mcp-ui server (optional):
+## MCP-UI client support for rendering raw-html, external-url or remote-dom from MCP-UI server (optional):
 - Install mcp-ui client with npm or bun in assets directory for rendering mcp-ui in browser
   ```bash
   > cd assets
