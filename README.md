@@ -299,6 +299,7 @@ end
     </.modal>
   ...
   ```
+  `<ui-resource-renderer />` element is different from `<.ui_resource_renderer />`, `<ui-resource-renderer />` element is the original MCP-UI element being used to render raw-html, external-url or remote-dom that being sent by MCP-UI Server.
 - Restart the phoenix server
 
 ## More Examples and Demo
