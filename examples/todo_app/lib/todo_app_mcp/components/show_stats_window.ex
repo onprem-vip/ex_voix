@@ -31,10 +31,9 @@ defmodule TodoAppMCP.Components.ShowStatsWindow do
   @impl true
   def execute(_params, frame) do
     stats = Todos.get_stats()
-    {:safe, stats_text} =
+    stats_text =
       Enum.map_join(stats, "</tr>", fn {k,v} -> "<tr><td align='left'>#{k}</td><td>#{v}</td>" end)
-      |> html_escape()
-    stats_text = "<table>#{stats_text}</table>"
+    {:safe, stats_text} = "<table>#{stats_text}</table>" |> html_escape()
 
     js_code =
     """
