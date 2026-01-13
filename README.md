@@ -34,7 +34,7 @@ Model Context Protocol (MCP): The underlying system connecting AI agents to exte
 
 MCP-UI: An extension to MCP, providing a way to send interactive UI elements.
 
-UIResource: The core object defining the UI content (HTML, URL, Remote DOM) to be delivered and displayed.
+UIResource: The core object defining the UI content (HTML, URL, Remote DOM and JS Command from Phoenix Liveview) to be delivered, actioned and displayed.
 
 Client SDK: How the UIResource will be delivered and displayed to the users by Phoenix LiveView and MCP-UI client renderer.
 ```
