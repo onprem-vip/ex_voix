@@ -8,3 +8,7 @@
 - 2026-01-13 (ver. 0.3.6)
     * fix a bug related to window.addEventListener("call", eventHandler) being called twice
     * update README.md
+- 2026-01-13 (ver. 0.3.8)
+    * refactor and rename addEventHandler to addCallEventHandler
+    * fix a bug in declare global voixHandler
+    * update README.md
