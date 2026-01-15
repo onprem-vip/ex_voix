@@ -33,10 +33,6 @@ config :todo_app, TodoAppMCP.Endpoint,
   check_origin: false,
   code_reloader: false,
   debug_errors: true,
-  # watchers: [
-  #   esbuild: {Esbuild, :install_and_run, [:ai_commerce, ~w(--sourcemap=inline --watch)]},
-  #   tailwind: {Tailwind, :install_and_run, [:ai_commerce, ~w(--watch)]}
-  # ],
   secret_key_base: "hfgBR1sJDa/XJb6AQazzk2MVbveuQn2LUFZmDUagH67sNfLFMGq+czxQCnLr9Weu"
 
 # ## SSL Support
