@@ -10,7 +10,7 @@ defmodule TodoAppMCP.Components.CompleteTask do
   alias TodoApp.Todos
 
   schema do
-    field :id, :integer, required: true
+    field :id, :any, required: true
     field :completed, :boolean, description: "Is the task completed?"
   end
 

@@ -15,15 +15,17 @@ defmodule ExVoix.ModelContext.Tool do
         [tool_info] = Registry.load_tool(mcp, target_name, false)
         # TODO: put id from target_name to detail
         has_item_id = Map.get(tool_info, "title") |> String.replace(" ", "") |> String.contains?("<%=item_id%>")
+
         detail =
           if has_item_id do
-            name_prefix = Map.get(tool_info, "title") |> String.replace(" ", "") |> String.replace("<%=item_id%>", "")
-            item_id = String.replace(target_name, name_prefix, "")
-            Map.put(detail, "id", String.to_integer(item_id))
+            splitted_names = Map.get(tool_info, "title") |> String.replace(" ", "") |> String.split("<%=item_id%>")
+              |> Enum.filter(&(not is_nil(&1) and &1 != ""))
+            item_id = String.replace(target_name, splitted_names, "")
+            Map.put(detail, "id", item_id)
           else
             detail
           end
-        # IO.inspect(detail, label: "detail in call event")
+        IO.inspect(detail, label: "detail in call event")
         call_tool_response(mcp, Map.get(tool_info, "name"), detail)
 
       end

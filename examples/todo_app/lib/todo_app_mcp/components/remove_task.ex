@@ -10,7 +10,7 @@ defmodule TodoAppMCP.Components.RemoveTask do
   alias TodoApp.Todos
 
   schema do
-    field :id, :integer, required: true
+    field :id, :any, required: true
   end
 
   @impl true

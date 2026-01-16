@@ -17,7 +17,7 @@ defmodule ExVoix.Html.Components do
   """
   attr :mcp, :atom, required: true, doc: "the module of mcp server"
   attr :name, :any, required: true, doc: "the name of tool"
-  attr :item_id, :integer, doc: "the id related to item tool"
+  attr :item_id, :any, doc: "the id related to item tool"
   attr :item_label, :string, doc: "the label related to item tool"
 
   def tool(assigns) do

@@ -1,6 +1,6 @@
-defmodule TodoAppMCP.Components.ShowUpdateTaskForm do
+defmodule TodoAppMCP.Components.SaveTaskForm do
   @moduledoc """
-  Show update task form
+  Save task form
   """
 
   use Anubis.Server.Component,
@@ -12,26 +12,25 @@ defmodule TodoAppMCP.Components.ShowUpdateTaskForm do
   alias ExVoix.ModelContext.UI.CommandPayload
 
   schema do
-    field :id, :any, required: true
+    # field :id, :integer, required: true
   end
 
   @impl true
   def title() do
-    "show_update_task_form_<%= item_id %>"
+    "save_task_form"
   end
 
   @impl true
   def description() do
-    "Show update task '<%= item_label %>' form"
+    "Save task form"
   end
 
   @impl true
-  def execute(%{
-    id: id
-  } = _params, frame) do
+  def execute(_params, frame) do
     interactive_js = """
-    JS.patch("/tasks/#{id}/edit")
+    JS.dispatch("click", to: "#save-task")
     """
+
     lvjs_payload = CommandPayload.new(%{
       framework: "liveviewjs",
       script: interactive_js |> String.trim()
@@ -39,7 +38,7 @@ defmodule TodoAppMCP.Components.ShowUpdateTaskForm do
 
     resource = UIResource.new(
       %{
-        uri: "ui://todo_app/show-task-form",
+        uri: "ui://todo_app/save-task-form",
         content: lvjs_payload,
         encoding: EncodingType.Text,
         # ui_metadata: %{},
@@ -50,4 +49,5 @@ defmodule TodoAppMCP.Components.ShowUpdateTaskForm do
 
     {:reply, response, frame}
   end
+
 end

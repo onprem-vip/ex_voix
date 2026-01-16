@@ -10,11 +10,7 @@ defmodule TodoAppMCP.Server do
   component(TodoAppMCP.Components.ShowUpdateTaskForm)
   component(TodoAppMCP.Components.ShowStatsWindow)
   component(TodoAppMCP.Components.CloseAnyForm)
-
-  # def init(_client_info, frame) do
-  #   # TODO:
-
-  #   {:ok,frame}
-  # end
+  component(TodoAppMCP.Components.SaveTaskForm)
+  component(TodoAppMCP.Components.UpdateFieldValue)
 
 end

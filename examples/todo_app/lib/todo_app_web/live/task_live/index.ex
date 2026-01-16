@@ -158,6 +158,13 @@ defmodule TodoAppWeb.TaskLive.Index do
     end
   end
 
+  @impl true
+  def handle_event("update-notes", %{"to" => to, "value" => value}, socket) do
+    IO.inspect({to, value}, label: "update-notes")
+
+    {:noreply, socket}
+  end
+
   defp tool_call_action(socket, res) do
     if is_map(res) and not Map.get(res, "isError", true) do
       case Map.get(res, "tool") do
