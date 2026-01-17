@@ -30,11 +30,6 @@ defmodule TodoAppMCP.Components.UpdateFieldValue do
   def execute(%{id: id, value: new_value} = _params, frame) do
     interactive_js =
     case id do
-      "task_notes" ->
-        """
-          JS.set_attribute({"value", "#{new_value}"}, to: "##{id}") |> JS.dispatch("input", to: "##{id}")
-        """
-
       "task_priority" ->
         """
           JS.dispatch("set_value", detail: %{value: "#{String.downcase(new_value)}"}, to: "##{id}") |> JS.show(transition: {"ease-out duration-300", "opacity-0", "opacity-100"}, time: 300, to: "##{id}")
