@@ -37,7 +37,7 @@ defmodule TodoAppMCP.Components.UpdateFieldValue do
 
       "task_priority" ->
         """
-          JS.dispatch("set_value", detail: %{value: "#{new_value}"}, to: "##{id}") |> JS.show(transition: {"ease-out duration-300", "opacity-0", "opacity-100"}, time: 300, to: "##{id}")
+          JS.dispatch("set_value", detail: %{value: "#{String.downcase(new_value)}"}, to: "##{id}") |> JS.show(transition: {"ease-out duration-300", "opacity-0", "opacity-100"}, time: 300, to: "##{id}")
         """
 
       _ ->
