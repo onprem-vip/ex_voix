@@ -83,7 +83,7 @@ defmodule ExVoix.Html.Components do
 
   ## Examples
 
-      <.ui_resource_renderer id="my-script" />
+      <.ui_resource_renderer id="my-script" resource={@resource} />
   """
   attr :id, :string, required: true,
     doc: "the id of the element"
