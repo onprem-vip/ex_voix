@@ -467,6 +467,10 @@ console.log('Injecting MCP Server into page');
   window.addEventListener('hashchange', () => {
     chrome.runtime.sendMessage({ type: 'PAGE_DATA_UPDATED' });
   });
+  window.addEventListener('pushchatinput', (event) => {
+    let text = event.detail && event.detail.text ? event.detail.text : '';
+    chrome.runtime.sendMessage({ type: 'CHAT_INPUT_SENT', inputText: text});
+  });
 
   console.log('MCP Server injected successfully');
 

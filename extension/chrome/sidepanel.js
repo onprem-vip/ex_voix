@@ -733,6 +733,13 @@ class VOIXSidePanel {
     }
   }
 
+  prepare_chat_input(message) {
+    const input = document.getElementById('chat-input');
+    input.value = message;
+    input.focus();
+  }
+
+
   setupContentScriptCommunication() {
     // Listen for messages from content scripts
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -743,6 +750,10 @@ class VOIXSidePanel {
         // Display a system message for tool execution
         console.log('📡 Sidepanel received tool call:', message);
         this.addMessage('system', `**🔧 Tool executed:** \`${message.toolName || 'unknown'}\``);
+      } else if (message.type === 'CHAT_INPUT_SENT') {
+        console.log('📡 Sidepanel received CHAT_INPUT_SENT event');
+        this.prepare_chat_input(message.inputText);
+        this.sendMessage();
       } else {
         console.warn('📡 Sidepanel received unknown message type:', message.type);
       }

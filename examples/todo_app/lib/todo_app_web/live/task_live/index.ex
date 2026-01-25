@@ -47,7 +47,7 @@ defmodule TodoAppWeb.TaskLive.Index do
     |> assign(:page_title, "Todo App · Stats")
     |> assign(:task, %Task{})
     |> assign(:form, to_form(task_changeset))
-    |> execute_remote_code("#remote-code-renderer", socket.assigns.resource)
+    |> execute_remote_code("remote-code-renderer", socket.assigns.resource)
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
@@ -192,7 +192,7 @@ defmodule TodoAppWeb.TaskLive.Index do
             |> push_patch(to: "/tasks/stats")
 
         _ ->
-          socket |> execute_remote_code("#executable-script", res)
+          socket |> execute_remote_code("executable-script", res)
 
       end
     else
@@ -219,7 +219,7 @@ defmodule TodoAppWeb.TaskLive.Index do
   end
 
   defp execute_remote_code(socket, dom_id, res) do
-    payload = %{to: dom_id, resource: res}
+    payload = %{to: "##{dom_id}", resource: res}
     socket
       |> assign(:resource, res)
       |> push_event("ui-resource-render", payload)

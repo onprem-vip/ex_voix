@@ -35,7 +35,7 @@ class UIText extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     const p = document.createElement('p');
     // p.textContent = this.getAttribute('content');
-    p.innerHTML = this.getAttribute('content');
+    p.innerHTML = this.getAttribute('content') || '';
     this.shadowRoot?.appendChild(p);
   }
 
